@@ -1,15 +1,40 @@
 [project]
 name = "colony-counter"
 version = "0.1.0"
-description = "Add your description here"
+description = "Count colonies and measure stained area from crystal-violet petri-dish images."
 readme = "README.md"
+license = { file = "LICENSE" }
 authors = [
     { name = "hh65", email = "hh65@sussex.ac.uk" }
 ]
+keywords = ["colony", "microscopy", "image-analysis", "crystal-violet", "petri-dish"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Image Processing",
+]
 requires-python = ">=3.13"
 dependencies = [
+    "matplotlib>=3.9",
+    "numpy>=2.0",
+    "openpyxl>=3.1",
+    "pillow>=10.0",
     "python-dotenv>=1.2.2",
+    "scikit-image>=0.24",
+    "scipy>=1.13",
 ]
+
+[project.urls]
+Homepage = "https://github.com/hh65/colony-counter"
+Issues = "https://github.com/hh65/colony-counter/issues"
+
+[project.scripts]
+colony-counter = "colony_counter.cli:main"
 
 [build-system]
 requires = ["hatchling"]

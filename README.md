@@ -136,6 +136,17 @@ commitizen:
 uv run cz bump
 ```
 
+## Documentation for developers
+
+If you're picking this project up to develop it further, start here:
+
+- [`docs/project-structure.md`](docs/project-structure.md) — how the project is
+  laid out, `uv` virtual environments, the `src/` layout, `__init__.py` and
+  Python packaging, and what testing is about.
+- [`docs/roadmap.md`](docs/roadmap.md) — a guided, milestone-by-milestone list
+  of next steps (rich CLI, dish auto-detection, CSV outputs, validation, CI and
+  a PyPI release), designed to be worked through with Claude Code.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

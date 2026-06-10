@@ -7,8 +7,10 @@ from pathlib import Path
 import numpy as np
 from openpyxl import load_workbook
 
+import csv
+
 from colony_counter.detection import ColonyRecord, DetectionResult
-from colony_counter.excel import ImageReport, write_workbook
+from colony_counter.excel import ImageReport, write_csvs, write_workbook
 
 
 def _fake_result(n: int = 2) -> DetectionResult:
@@ -64,6 +66,45 @@ def test_write_workbook_with_empty_reports(tmp_path: Path) -> None:
     write_workbook([], out)
     wb = load_workbook(out)
     assert wb.sheetnames == ["Summary"]
+
+
+def test_write_csvs_summary_rows(tmp_path: Path) -> None:
+    reports = [
+        ImageReport(name="plate_01.tif", result=_fake_result(2)),
+        ImageReport(name="plate_02.tif", result=_fake_result(1)),
+    ]
+    write_csvs(reports, tmp_path)
+
+    summary = list(csv.DictReader((tmp_path / "summary.csv").open()))
+    assert len(summary) == 2
+    assert summary[0]["image_name"] == "plate_01.tif"
+    assert int(summary[0]["colony_count"]) == 2
+    assert summary[1]["image_name"] == "plate_02.tif"
+
+
+def test_write_csvs_colonies_long_format(tmp_path: Path) -> None:
+    reports = [
+        ImageReport(name="plate_01.tif", result=_fake_result(2)),
+        ImageReport(name="plate_02.tif", result=_fake_result(3)),
+    ]
+    write_csvs(reports, tmp_path)
+
+    colonies = list(csv.DictReader((tmp_path / "colonies.csv").open()))
+    # 2 + 3 colonies total
+    assert len(colonies) == 5
+    assert colonies[0]["image_name"] == "plate_01.tif"
+    assert colonies[2]["image_name"] == "plate_02.tif"
+    assert set(colonies[0].keys()) == {
+        "image_name", "colony_id", "area_px", "area_pct",
+        "density", "centroid_x", "centroid_y",
+    }
+
+
+def test_write_csvs_empty_reports(tmp_path: Path) -> None:
+    write_csvs([], tmp_path)
+    assert (tmp_path / "summary.csv").exists()
+    assert (tmp_path / "colonies.csv").exists()
+    assert list(csv.DictReader((tmp_path / "summary.csv").open())) == []
 
 
 def test_long_image_name_is_truncated_for_sheet(tmp_path: Path) -> None:

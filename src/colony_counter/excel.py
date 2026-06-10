@@ -1,7 +1,8 @@
-"""Excel report writer."""
+"""Excel and CSV report writers."""
 
 from __future__ import annotations
 
+import csv
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -187,6 +188,41 @@ def _write_colony_sheet(ws: Worksheet, report: ImageReport) -> None:
         COLONY_COL_WIDTHS, ["A", "B", "C", "D", "E", "F"], strict=True
     ):
         ws.column_dimensions[letter].width = width
+
+
+def write_csvs(reports: list[ImageReport], output_dir: Path) -> None:
+    """Write summary.csv and colonies.csv (long format) to output_dir."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    with open(output_dir / "summary.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(
+            ["image_name", "colony_count", "colony_area_pct", "mean_density", "dish_area_px"]
+        )
+        for report in reports:
+            r = report.result
+            writer.writerow(
+                [report.name, r.n_colonies, r.colony_area_pct, r.mean_density, r.dish_area_px]
+            )
+
+    with open(output_dir / "colonies.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(
+            ["image_name", "colony_id", "area_px", "area_pct", "density", "centroid_x", "centroid_y"]
+        )
+        for report in reports:
+            for c in report.result.colonies:
+                writer.writerow(
+                    [
+                        report.name,
+                        c["colony_id"],
+                        c["area_px"],
+                        c["area_pct"],
+                        c["density"],
+                        c["centroid_x"],
+                        c["centroid_y"],
+                    ]
+                )
 
 
 def write_workbook(reports: list[ImageReport], output_path: Path) -> None:

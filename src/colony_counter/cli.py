@@ -10,7 +10,7 @@ from pathlib import Path
 
 from .config import get_logger
 from .detection import detect
-from .excel import ImageReport, write_workbook
+from .excel import ImageReport, write_csvs, write_workbook
 from .params import DEFAULT_PARAMS, DetectionParams
 from .visualization import save_mask_figure
 
@@ -142,6 +142,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     excel_path = output_dir / "colony_results.xlsx"
     write_workbook(reports, excel_path)
     logger.info("Excel report saved → %s", excel_path)
+
+    write_csvs(reports, output_dir)
+    logger.info("CSV reports saved → %s", output_dir)
     return 0
 
 

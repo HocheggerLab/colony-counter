@@ -197,18 +197,38 @@ def write_csvs(reports: list[ImageReport], output_dir: Path) -> None:
     with open(output_dir / "summary.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(
-            ["image_name", "colony_count", "colony_area_pct", "mean_density", "dish_area_px"]
+            [
+                "image_name",
+                "colony_count",
+                "colony_area_pct",
+                "mean_density",
+                "dish_area_px",
+            ]
         )
         for report in reports:
             r = report.result
             writer.writerow(
-                [report.name, r.n_colonies, r.colony_area_pct, r.mean_density, r.dish_area_px]
+                [
+                    report.name,
+                    r.n_colonies,
+                    r.colony_area_pct,
+                    r.mean_density,
+                    r.dish_area_px,
+                ]
             )
 
     with open(output_dir / "colonies.csv", "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(
-            ["image_name", "colony_id", "area_px", "area_pct", "density", "centroid_x", "centroid_y"]
+            [
+                "image_name",
+                "colony_id",
+                "area_px",
+                "area_pct",
+                "density",
+                "centroid_x",
+                "centroid_y",
+            ]
         )
         for report in reports:
             for c in report.result.colonies:

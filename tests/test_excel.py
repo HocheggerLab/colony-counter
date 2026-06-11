@@ -95,8 +95,13 @@ def test_write_csvs_colonies_long_format(tmp_path: Path) -> None:
     assert colonies[0]["image_name"] == "plate_01.tif"
     assert colonies[2]["image_name"] == "plate_02.tif"
     assert set(colonies[0].keys()) == {
-        "image_name", "colony_id", "area_px", "area_pct",
-        "density", "centroid_x", "centroid_y",
+        "image_name",
+        "colony_id",
+        "area_px",
+        "area_pct",
+        "density",
+        "centroid_x",
+        "centroid_y",
     }
 
 
